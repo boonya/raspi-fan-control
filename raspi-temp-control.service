@@ -1,0 +1,12 @@
+[Unit]
+Description=RaspberryPI Temperature Control
+Documentation=https://github.com/boonya/raspi-temp-control
+
+[Service]
+WorkingDirectory=/usr/local/raspi-temp-control
+ExecStart=/usr/bin/raspi-temp-control
+TimeoutStartSec=30
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
