@@ -2,6 +2,8 @@
 
 ## Preparation
 
+If you want to run this script
+
 To enable your user works with GPIO interface on a Ubuntu Server you have to:
 
 - Create `gpio` group
@@ -54,12 +56,24 @@ sudo ln -s /usr/local/raspi-temp-control/main.py /usr/bin/raspi-temp-control
 sudo ln -s /usr/local/raspi-temp-control/raspi-temp-control.service /etc/systemd/system/raspi-temp-control.service
 sudo systemctl daemon-reload
 sudo systemctl start raspi-temp-control
+sudo systemctl status raspi-temp-control
 sudo systemctl enable raspi-temp-control
+```
+
+## Deinstallation
+
+```bash
+sudo systemctl disable raspi-temp-control
+sudo systemctl stop raspi-temp-control
+sudo rm /etc/systemd/system/raspi-temp-control.service
+sudo rm /usr/bin/raspi-temp-control
+sudo pip3 uninstall -r requirements.txt
+sudo rm -rf /usr/local/raspi-temp-control
 ```
 
 ## Origin
 
-- [](https://askubuntu.com/a/1233458/790519)
-- [](https://www.digikey.com/en/maker/projects/c5061a5c6cf646b69a2ff6d698298422)
-- [udev RUS](https://losst.ru/nastrojka-udev-rules-v-linux)
-- [](https://www.electronicwings.com/raspberry-pi/raspberry-pi-pwm-generation-using-python-and-c)
+- [GPIO for Raspberry PI GPIO Group](https://askubuntu.com/a/1233458/790519)
+- [Build Your Own IoT Fan with Raspberry Pi](https://www.digikey.com/en/maker/projects/c5061a5c6cf646b69a2ff6d698298422)
+- [Настройка udev rules в Linux](https://losst.ru/nastrojka-udev-rules-v-linux)
+- [Raspberry Pi PWM Generation using Python and C](https://www.electronicwings.com/raspberry-pi/raspberry-pi-pwm-generation-using-python-and-c)
