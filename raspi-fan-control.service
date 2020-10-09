@@ -1,0 +1,12 @@
+[Unit]
+Description=RaspberryPI Cooling Fan Control Service
+Documentation=https://github.com/boonya/raspi-fan-control
+
+[Service]
+WorkingDirectory=/usr/local/raspi-fan-control
+ExecStart=/usr/bin/raspi-fan-control
+TimeoutStartSec=30
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,29 +1,30 @@
-# RaspberyPI Temperature Control Service
+# RaspberryPI Cooling Fan Control Service
 
 ## Installation
 
 ```bash
 cd /usr/local/
-sudo git clone https://github.com/boonya/raspi-temp-control
-cd raspi-temp-control
+sudo git clone https://github.com/boonya/raspi-fan-control
+cd raspi-fan-control
 sudo pip3 install -r requirements.txt
-sudo ln -s /usr/local/raspi-temp-control/main.py /usr/bin/raspi-temp-control
-sudo ln -s /usr/local/raspi-temp-control/raspi-temp-control.service /etc/systemd/system/raspi-temp-control.service
+sudo ln -s /usr/local/raspi-fan-control/main.py /usr/bin/raspi-fan-control
+sudo ln -s /usr/local/raspi-fan-control/raspi-fan-control.service /etc/systemd/system/raspi-fan-control.service
 sudo systemctl daemon-reload
-sudo systemctl start raspi-temp-control
-sudo systemctl status raspi-temp-control
-sudo systemctl enable raspi-temp-control
+sudo systemctl start raspi-fan-control
+sudo systemctl status raspi-fan-control
+sudo systemctl enable raspi-fan-control
 ```
 
 ## Deinstallation
 
 ```bash
-sudo systemctl disable raspi-temp-control
-sudo systemctl stop raspi-temp-control
-sudo rm /etc/systemd/system/raspi-temp-control.service
-sudo rm /usr/bin/raspi-temp-control
+sudo systemctl disable raspi-fan-control
+sudo systemctl stop raspi-fan-control
+sudo rm /usr/bin/raspi-fan-control
+cd /usr/local/raspi-fan-control
 sudo pip3 uninstall -r requirements.txt
-sudo rm -rf /usr/local/raspi-temp-control
+cd ~
+sudo rm -rf /usr/local/raspi-fan-control
 ```
 
 ## Additional

@@ -2,17 +2,17 @@
 from time import sleep
 import RPi.GPIO as GPIO
 
-def init_pwm_out():
-    pwm_pin_number = 12
-    pwm_frequency = 100
+PWM_PIN_NUMBER = 12
+PWM_FREQUENCY = 100
 
+def init_pwm_out():
     # Configure GPIO14 as an output
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(pwm_pin_number, GPIO.OUT)
+    GPIO.setup(PWM_PIN_NUMBER, GPIO.OUT)
 
     # Create a PWM object
-    pwm_out = GPIO.PWM(pwm_pin_number, pwm_frequency)   # Create PWM instance with frequency
+    pwm_out = GPIO.PWM(PWM_PIN_NUMBER, PWM_FREQUENCY)   # Create PWM instance with frequency
     pwm_out.start(0)                                    # Start PWM of required Duty Cycle
 
     return pwm_out
@@ -31,7 +31,7 @@ def calc_duty_cycle(temp):
     if temp > 60.0:
         return 70
     if temp > 50.0:
-        return 40
+        return 50
     if temp > 40.0:
         return 30
     return 0
