@@ -1,0 +1,9 @@
+name: Build Debian package
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: dawidd6/action-debian-package@v1.0.1
