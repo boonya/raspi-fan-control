@@ -14,8 +14,8 @@ jobs:
           mkdir -p pkg-src/etc/systemd/system/
           cp raspi-fan-control.service pkg-src/etc/systemd/system/raspi-fan-control.service
           PYTHON_PACKAGES=$(cat requirements.txt | xargs)
-          sed -i "s/{{python-packages}}:$PYTHON_PACKAGES/" pkg-src/DEBIAN/postinst
-          sed -i "s/{{python-packages}}:$PYTHON_PACKAGES/" pkg-src/DEBIAN/postrm
+          sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postinst
+          sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postrm
       - uses: jiro4989/build-deb-action@v2
         with:
           package: raspi-fan-control
