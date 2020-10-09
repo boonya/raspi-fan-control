@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+systemctl disable raspi-fan-control
+systemctl stop raspi-fan-control
+rm /usr/bin/raspi-fan-control

@@ -6,4 +6,16 @@ jobs:
   build:
     runs-on: [ubuntu-latest]
     steps:
-      - uses: dawidd6/action-debian-package@v1.0.1
+      - uses: actions/checkout@v2
+      - name: Create package source
+        run: |
+          cp main.py /usr/bin/raspi-fan-control
+          cp raspi-fan-control.service /etc/systemd/system/raspi-fan-control.service
+      - uses: jiro4989/build-deb-action@v2
+        with:
+          package: raspi-fan-control
+          package_root: pkg-src
+          maintainer: Serhii [boonya] Buinytskyi <me@boonya.info>
+          version: ${{ github.ref }} # refs/tags/v*.*.*
+          arch: 'arm64'
+          desc: 'RaspberryPI Cooling Fan Control Service.'
