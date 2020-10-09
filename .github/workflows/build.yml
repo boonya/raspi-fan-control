@@ -13,12 +13,19 @@ jobs:
           cp main.py pkg-src/usr/bin/raspi-fan-control
           mkdir -p pkg-src/etc/systemd/system/
           cp raspi-fan-control.service pkg-src/etc/systemd/system/raspi-fan-control.service
+          PYTHON_PACKAGES=$(cat requirements.txt | xargs)
+          sed -i "s/{{python-packages}}:$PYTHON_PACKAGES/" pkg-src/DEBIAN/postinst
+          sed -i "s/{{python-packages}}:$PYTHON_PACKAGES/" pkg-src/DEBIAN/postrm
       - uses: jiro4989/build-deb-action@v2
         with:
           package: raspi-fan-control
           package_root: pkg-src
           maintainer: Serhii [boonya] Buinytskyi <me@boonya.info>
-          # version: ${{ github.ref }} # refs/tags/v*.*.*
-          version: 1
+          version: ${{ github.ref }} # refs/tags/v*.*.*
           arch: 'arm64'
           desc: 'RaspberryPI Cooling Fan Control Service.'
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: raspi-fan-control_${{ github.ref }}_arm64.deb
+          path: raspi-fan-control_${{ github.ref }}_arm64.deb
