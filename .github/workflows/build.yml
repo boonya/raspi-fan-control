@@ -21,11 +21,11 @@ jobs:
           package: raspi-fan-control
           package_root: pkg-src
           maintainer: Serhii [boonya] Buinytskyi <me@boonya.info>
-          version: PR${{github.event.issue.number}}
+          version: ${{github.event.issue.number}}
           arch: 'arm64'
           desc: 'RaspberryPI Cooling Fan Control Service.'
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
         with:
-          name: raspi-fan-control_PR${{github.event.issue.number}}_arm64.deb
-          path: raspi-fan-control_PR${{github.event.issue.number}}_arm64.deb
+          name: raspi-fan-control_${{github.event.issue.number}}_arm64.deb
+          path: raspi-fan-control_${{github.event.issue.number}}_arm64.deb
