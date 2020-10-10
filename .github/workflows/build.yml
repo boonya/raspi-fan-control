@@ -26,6 +26,3 @@ jobs:
           desc: 'RaspberryPI Cooling Fan Control Service.'
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
-        with:
-          name: raspi-fan-control_0_arm64.deb
-          path: raspi-fan-control_0_arm64.deb
