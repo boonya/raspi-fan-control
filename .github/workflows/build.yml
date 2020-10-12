@@ -11,8 +11,7 @@ jobs:
       - name: Retrieve latest package version
         run: |
           git fetch --tags
-          LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
-          LATEST_PKG_VERSION=LATEST_TAG
+          LATEST_PKG_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
       - name: Create package source
         run: |
