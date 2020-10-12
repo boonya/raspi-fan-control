@@ -26,3 +26,5 @@ jobs:
           desc: 'RaspberryPI Cooling Fan Control Service.'
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
+        with:
+          path: *.deb
