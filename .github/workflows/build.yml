@@ -17,7 +17,8 @@ jobs:
           PYTHON_PACKAGES=$(cat requirements.txt | xargs)
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postinst
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postrm
-          PKG_VERSION=git describe --tags $(git rev-list --tags --max-count=1)
+          LATEST_PKG_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
+          echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
       - name: Build package
         id: build
         uses: jiro4989/build-deb-action@v2
@@ -27,7 +28,7 @@ jobs:
           maintainer: Serhii [boonya] Buinytskyi <me@boonya.info>
           package_root: pkg-src
           arch: 'arm64'
-          version: ${{PKG_VERSION}}
+          version: ${{env.LATEST_PKG_VERSION}}
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
         with:
