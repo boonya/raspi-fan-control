@@ -11,7 +11,8 @@ jobs:
       - name: Retrieve latest package version
         run: |
           git fetch --tags
-          LATEST_PKG_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
+          LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+          LATEST_PKG_VERSION=LATEST_TAG
           echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
       - name: Create package source
         run: |
@@ -23,6 +24,7 @@ jobs:
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postinst
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postrm
       - name: Build package
+        id: build
         uses: jiro4989/build-deb-action@v2
         with:
           package: raspi-fan-control
@@ -31,10 +33,19 @@ jobs:
           package_root: pkg-src
           arch: 'arm64'
           version: ${{env.LATEST_PKG_VERSION}}
+      - name: "Output test 1"
+        run: |
+          echo "steps.build -> ${{steps.build}}"
+          echo "steps.build.outputs -> ${{steps.build.outputs}}"
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
         with:
           path: "*.deb"
+      - name: "Output test 2"
+        run: |
+          echo "steps.build -> ${{steps.build}}"
+          echo "steps.build.outputs -> ${{steps.build.outputs}}"
+
       # - name: Create Pre-Release
       #   id: create_release
       #   uses: actions/create-release@v1
