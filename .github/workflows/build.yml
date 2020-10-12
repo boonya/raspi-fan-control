@@ -17,10 +17,11 @@ jobs:
           PYTHON_PACKAGES=$(cat requirements.txt | xargs)
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postinst
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postrm
+      - name: Retrieve latest package version
+        run: |
           LATEST_PKG_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
       - name: Build package
-        id: build
         uses: jiro4989/build-deb-action@v2
         with:
           package: raspi-fan-control
