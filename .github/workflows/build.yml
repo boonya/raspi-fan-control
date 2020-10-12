@@ -6,7 +6,8 @@ jobs:
   build:
     runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Create package source
         run: |
           mkdir -p pkg-src/usr/bin
@@ -16,14 +17,15 @@ jobs:
           PYTHON_PACKAGES=$(cat requirements.txt | xargs)
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postinst
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postrm
-      - uses: jiro4989/build-deb-action@v2
+      - name: Build package
+        uses: jiro4989/build-deb-action@v2
         with:
           package: raspi-fan-control
-          package_root: pkg-src
-          maintainer: Serhii [boonya] Buinytskyi <me@boonya.info>
-          version: 0
-          arch: 'arm64'
           desc: 'RaspberryPI Cooling Fan Control Service.'
+          maintainer: Serhii [boonya] Buinytskyi <me@boonya.info>
+          package_root: pkg-src
+          arch: 'arm64'
+          version: ${{GITHUB_REF}}
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
         with:
