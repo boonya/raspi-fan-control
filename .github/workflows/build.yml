@@ -1,67 +1,79 @@
 name: Build Debian package
 
-on: [pull_request]
+on: [push]
+
+env:
+  PACKAGE_ROOT: pkg-src
+  PACKAGE: raspi-fan-control
+  DESC: "RaspberryPI Cooling Fan Control Service."
+  MAINTAINER: "Serhii [boonya] Buinytskyi <me@boonya.info>"
+  ARCH: arm64
 
 jobs:
   build:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Retrieve latest package version
         run: |
+          echo "github.event_name -> ${{github.event_name}}"
+          echo "github.event_path -> ${{github.event_path}}"
+
+          echo "github.base_ref -> ${{github.base_ref}}"
+          echo "github.head_ref -> ${{github.head_ref}}"
+          echo "github.ref -> ${{github.ref}}"
+
+          echo "github.repository -> ${{github.repository}}"
+          echo "github.repository_owner -> ${{github.repository_owner}}"
+
           git fetch --tags
           LATEST_PKG_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
       - name: Create package source
         run: |
-          mkdir -p pkg-src/usr/bin
-          cp main.py pkg-src/usr/bin/raspi-fan-control
-          mkdir -p pkg-src/etc/systemd/system/
-          cp raspi-fan-control.service pkg-src/etc/systemd/system/raspi-fan-control.service
+          mkdir -p ${{env.PACKAGE_ROOT}}/usr/bin
+          cp main.py ${{env.PACKAGE_ROOT}}/usr/bin/raspi-fan-control
+          mkdir -p ${{env.PACKAGE_ROOT}}/etc/systemd/system/
+          cp raspi-fan-control.service ${{env.PACKAGE_ROOT}}/etc/systemd/system/raspi-fan-control.service
           PYTHON_PACKAGES=$(cat requirements.txt | xargs)
-          sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postinst
-          sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" pkg-src/DEBIAN/postrm
+          sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" ${{env.PACKAGE_ROOT}}/DEBIAN/postinst
+          sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" ${{env.PACKAGE_ROOT}}/DEBIAN/postrm
       - name: Build package
         id: build
         uses: jiro4989/build-deb-action@v2
         with:
-          package: raspi-fan-control
-          desc: 'RaspberryPI Cooling Fan Control Service.'
-          maintainer: Serhii [boonya] Buinytskyi <me@boonya.info>
-          package_root: pkg-src
+          package: ${{env.PACKAGE}}
+          desc: ${{env.DESC}}
+          maintainer: ${{env.MAINTAINER}}
+          package_root: ${{env.PACKAGE_ROOT}}
           arch: 'arm64'
           version: ${{env.LATEST_PKG_VERSION}}
-      - name: "Output test 1"
-        run: |
-          echo "steps.build -> ${{steps.build}}"
-          echo "steps.build.outputs -> ${{steps.build.outputs}}"
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
         with:
           path: "*.deb"
-      - name: "Output test 2"
-        run: |
-          echo "steps.build -> ${{steps.build}}"
-          echo "steps.build.outputs -> ${{steps.build.outputs}}"
 
-      # - name: Create Pre-Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      #   with:
-      #     tag_name: ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     draft: true
-      #     prerelease: false
-      # - name: Upload Release Asset
-      #   id: upload-release-asset
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-      #     asset_path: ./artifact.zip
-      #     asset_name: artifact.zip
-      #     asset_content_type: application/zip
+  # create-release:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - name: Create Draft Release
+  #       id: create_release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+  #       with:
+  #         tag_name: ${{ github.ref }}
+  #         release_name: Release ${{ github.ref }}
+  #         draft: true
+  #         prerelease: false
+  #     - name: Upload Release Asset
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+  #         asset_path: ./artifact.zip
+  #         asset_name: artifact.zip
+  #         asset_content_type: application/vnd.debian.binary-package
