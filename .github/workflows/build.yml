@@ -23,8 +23,8 @@ jobs:
           echo "github.base_ref -> ${{github.base_ref}}"
           echo "github.head_ref -> ${{github.head_ref}}"
           echo "github.ref -> ${{github.ref}}"
-      # github.ref -> refs/heads/build-depkg
-      # github.ref -> refs/tags/v0.0.0
+          # github.ref -> refs/heads/build-depkg
+          # github.ref -> refs/tags/v0.0.0
           echo "::debug::github.ref -> ${{github.ref}}"
 
       - name: Retrieve latest package version
@@ -38,7 +38,7 @@ jobs:
           else
             git fetch --tags
             LATEST_PKG_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))-$LABEL
-        # echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
+            # echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
             echo "::set-output name=latest_pkg_version::$LATEST_PKG_VERSION"
           fi;
 
