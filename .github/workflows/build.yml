@@ -18,10 +18,10 @@ jobs:
 
       - name: Debug
         run: |
-          echo "github.event_name -> ${{github.event_name}}"
-          echo "github.base_ref -> ${{github.base_ref}}"
-          echo "github.head_ref -> ${{github.head_ref}}"
-          echo "github.ref -> ${{github.ref}}"
+          # echo "github.event_name -> ${{github.event_name}}"
+          # echo "github.base_ref -> ${{github.base_ref}}"
+          # echo "github.head_ref -> ${{github.head_ref}}"
+          # echo "github.ref -> ${{github.ref}}"
           # github.ref -> refs/heads/build-depkg
           # github.ref -> refs/tags/v0.0.0
           echo "::debug::github.ref -> ${{github.ref}}"
@@ -33,12 +33,13 @@ jobs:
           LABEL=$(echo ${{github.ref}} | cut -d'/' -f 3)
 
           if [[ "$TYPE" == "tags" ]]; then
-            echo "::set-output name=latest_pkg_version::$LABEL"
+            echo "LATEST_PKG_VERSION=$LABEL" >> $GITHUB_ENV
+            # echo "::set-output name=latest_pkg_version::$LABEL"
           else
             git fetch --tags
             LATEST_PKG_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))-$LABEL
-            # echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
-            echo "::set-output name=latest_pkg_version::$LATEST_PKG_VERSION"
+            echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
+            # echo "::set-output name=latest_pkg_version::$LATEST_PKG_VERSION"
           fi;
 
       - name: Create package source
@@ -59,8 +60,8 @@ jobs:
           maintainer: ${{env.MAINTAINER}}
           package_root: ${{env.PACKAGE_ROOT}}
           arch: 'arm64'
-          version: ${{steps.vars.outputs.latest_pkg_version}}
-          # version: ${{env.LATEST_PKG_VERSION}}
+          # version: ${{steps.vars.outputs.latest_pkg_version}}
+          version: ${{env.LATEST_PKG_VERSION}}
       - name: Upload package artifact
         uses: actions/upload-artifact@v2
         with:
