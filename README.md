@@ -3,6 +3,13 @@
 ## Installation
 
 ```bash
+wget https://github.com/boonya/raspi-fan-control/releases/download/v1.0.1/raspi-fan-control_1.0.1_arm64.deb
+sudo dpkg -i raspi-fan-control_1.0.1_arm64.deb
+```
+
+OR
+
+```bash
 cd /usr/local/
 sudo git clone https://github.com/boonya/raspi-fan-control
 cd raspi-fan-control
@@ -18,6 +25,12 @@ sudo systemctl enable raspi-fan-control
 ## Deinstallation
 
 ```bash
+sudo apt purge raspi-fan-control
+```
+
+OR
+
+```bash
 sudo systemctl disable raspi-fan-control
 sudo systemctl stop raspi-fan-control
 sudo rm /usr/bin/raspi-fan-control
@@ -29,7 +42,7 @@ sudo rm -rf /usr/local/raspi-fan-control
 
 ## Additional
 
-If you working on Ubuntu Server rather then the Rasbian you may want to give your
+If you working on Ubuntu Server rather then the Raspbian you may want to give your
 user rights to interact with `GPIO` interface.
 
 For doing that you need:

@@ -1,6 +1,9 @@
 name: Build
 
-on: push
+on:
+  push:
+    paths-ignore:
+    - '*.md'
 
 env:
   PACKAGE_ROOT: pkg-src
@@ -34,6 +37,8 @@ jobs:
           cp main.py ${{env.PACKAGE_ROOT}}/usr/bin/raspi-fan-control
           mkdir -p ${{env.PACKAGE_ROOT}}/etc/systemd/system/
           cp raspi-fan-control.service ${{env.PACKAGE_ROOT}}/etc/systemd/system/raspi-fan-control.service
+          mkdir -p ${{env.PACKAGE_ROOT}}/usr/share/doc/raspi-fan-control
+          cp LICENSE ${{env.PACKAGE_ROOT}}/usr/share/doc/raspi-fan-control/copyright
           PYTHON_PACKAGES=$(cat requirements.txt | xargs)
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" ${{env.PACKAGE_ROOT}}/DEBIAN/postinst
           sed -i "s/{{python-packages}}/$PYTHON_PACKAGES/" ${{env.PACKAGE_ROOT}}/DEBIAN/postrm
