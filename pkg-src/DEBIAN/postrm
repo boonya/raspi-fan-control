@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -e
+
+pip3 uninstall {{python-packages}}
