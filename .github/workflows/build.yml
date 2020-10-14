@@ -15,23 +15,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Debug
-        run: |
-          # echo "github.event_name -> ${{github.event_name}}"
-          # echo "github.base_ref -> ${{github.base_ref}}"
-          # echo "github.head_ref -> ${{github.head_ref}}"
-          # echo "github.ref -> ${{github.ref}}"
-          # github.ref -> refs/heads/build-depkg
-          # github.ref -> refs/tags/v0.0.0
-          echo "::debug::github.ref -> ${{github.ref}}"
-
       - name: Retrieve latest package version
-        # if: startsWith(github.ref, 'refs/tags/') != true
         run: |
           TYPE=$(echo ${{github.ref}} | cut -d'/' -f 2)
           LABEL=$(echo ${{github.ref}} | cut -d'/' -f 3)
-
           if [[ "$TYPE" == "tags" ]]; then
             echo "LATEST_PKG_VERSION=$LABEL" >> $GITHUB_ENV
             # echo "::set-output name=latest_pkg_version::$LABEL"
@@ -41,7 +28,6 @@ jobs:
             echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
             # echo "::set-output name=latest_pkg_version::$LATEST_PKG_VERSION"
           fi;
-
       - name: Create package source
         run: |
           mkdir -p ${{env.PACKAGE_ROOT}}/usr/bin
@@ -66,21 +52,14 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: "*.deb"
-
-      # - name: Debug
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: artifact
-      - name: Debug
+      - name: Retrieve package name
         run: |
-          ls -alh .
-          ls *.deb
           PKG=$(ls *.deb)
           echo "PKG=$PKG" >> $GITHUB_ENV
       - name: Create Draft Release
+        uses: actions/create-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         id: create_release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
@@ -89,41 +68,12 @@ jobs:
           draft: true
           prerelease: false
       - name: Upload Release Asset
-        if: startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-release-asset@v1
+        if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          upload_url: ${{steps.create_release.outputs.upload_url}}
           asset_path: ${{env.PKG}}
           asset_name: ${{env.PKG}}
           asset_content_type: application/vnd.debian.binary-package
-
-  # release:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   if: startsWith(github.ref, 'refs/tags/')
-  #   steps:
-  #     - name: listing again
-  #       run: |
-  #         ls -alh .
-  #         PKG=ls *.deb
-  #     - name: Create Draft Release
-  #       id: create_release
-  #       uses: actions/create-release@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-  #       with:
-  #         tag_name: ${{ github.ref }}
-  #         release_name: Release ${{ github.ref }}
-  #         draft: true
-  #         prerelease: false
-  #     - name: Upload Release Asset
-  #       uses: actions/upload-release-asset@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-  #         asset_path: $PKG
-  #         asset_name: $PKG
-  #         asset_content_type: application/vnd.debian.binary-package
