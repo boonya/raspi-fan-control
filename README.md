@@ -86,6 +86,9 @@ Also it gives full rights to the `gpio` group members.
 sudo usermod -aG gpio username
 ```
 
+<img width="666" height="346" alt="image" src="https://github.com/user-attachments/assets/ee651ad4-eadb-4492-96f1-51f8bea0f19a" />
+
+
 ## Origin
 
 - [GPIO for Raspberry PI GPIO Group](https://askubuntu.com/a/1233458/790519)
