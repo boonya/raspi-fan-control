@@ -33,7 +33,7 @@ jobs:
             - name: Create package source
               run: |
                   mkdir -p ${{env.PACKAGE_ROOT}}/usr/bin
-                  cp main.py ${{env.PACKAGE_ROOT}}/usr/local/bin/cooler
+                  cp cooler.sh ${{env.PACKAGE_ROOT}}/usr/local/bin/cooler
                   mkdir -p ${{env.PACKAGE_ROOT}}/etc/systemd/system/
                   cp cooler.service ${{env.PACKAGE_ROOT}}/etc/systemd/system/cooler.service
                   mkdir -p ${{env.PACKAGE_ROOT}}/usr/share/doc/cooler
