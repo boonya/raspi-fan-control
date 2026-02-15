@@ -1,6 +1,5 @@
-#!/bin/sh
-
+#!/bin/env sh
 set -e
 
-systemctl disable raspi-fan-control || echo "Can't disable service"
-systemctl stop raspi-fan-control || echo "Can't stop service"
+systemctl disable cooler || echo "Can't disable service"
+systemctl stop cooler || echo "Can't stop service"

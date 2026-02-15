@@ -1,8 +1,6 @@
-#!/bin/sh
-
+#!/bin/env sh
 set -e
 
-pip3 install {{python-packages}}
 sudo systemctl daemon-reload
-systemctl start raspi-fan-control || echo "Can't start service"
-systemctl enable raspi-fan-control || echo "Can't enable service"
+systemctl start cooler || echo "Can't start service"
+systemctl enable cooler || echo "Can't enable service"
