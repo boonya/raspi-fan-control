@@ -1,8 +1,16 @@
 name: Build
 
 on:
-    workflow_dispatch:
     workflow_call:
+        inputs:
+            version:
+                type: string
+                required: true
+    workflow_dispatch:
+        inputs:
+            version:
+                type: string
+                required: true
 
 jobs:
     build:
@@ -21,7 +29,7 @@ jobs:
               with:
                   package: cooler
                   desc: "RaspberryPI Cooling Fan Control Service"
-                  version: 1.0.0+${{ github.ref_name }}
+                  version: ${{ inputs.version }}+${{ github.ref_name }}
                   homepage: ${{ github.repositoryUrl }}
                   maintainer: ${{ github.repository_owner }}
                   arch: arm64
@@ -30,5 +38,5 @@ jobs:
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: cooler-deb-package
+                  name: cooler-deb-package-${{ inputs.version }}+${{ github.ref_name }}
                   path: "*.deb"
