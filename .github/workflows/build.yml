@@ -16,7 +16,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v6.0.2
             - name: Retrieve latest package version
               run: |
                   TYPE=$(echo ${{github.ref}} | cut -d'/' -f 2)
@@ -50,7 +50,7 @@ jobs:
                   # version: ${{steps.vars.outputs.latest_pkg_version}}
                   version: ${{env.LATEST_PKG_VERSION}}
             - name: Upload package artifact
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v6.0.0
               with:
                   path: "*.deb"
             - name: Retrieve package name
