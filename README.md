@@ -4,14 +4,13 @@
 
 ### Installation
 
-```bash
-wget https://github.com/boonya/raspi-fan-control/releases/download/v1.0.1/cooler_1.0.1_arm64.deb
-sudo dpkg -i cooler_1.0.1_arm64.deb
+```sh
+sudo dpkg -i cooler_1.0.0+main_arm64.deb
 ```
 
 ### Deinstallation
 
-```bash
+```sh
 sudo apt purge cooler
 ```
 
