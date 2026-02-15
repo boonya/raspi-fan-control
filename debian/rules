@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	# Install executable
+	install -D -m 0755 cooler.sh debian/cooler/usr/local/bin/cooler.sh
+	# Install systemd service
+	install -D -m 0644 cooler.service debian/cooler/lib/systemd/system/cooler.service

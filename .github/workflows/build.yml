@@ -4,77 +4,26 @@ on:
     workflow_dispatch:
     workflow_call:
 
-env:
-    PACKAGE_ROOT: pkg-src
-    PACKAGE: cooler
-    DESC: "RaspberryPI Cooling Fan Control Service."
-    MAINTAINER: "Serhii [boonya] Buinytskyi <me@boonya.info>"
-    ARCH: arm64
-
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout
-              uses: actions/checkout@v6.0.2
-            - name: Retrieve latest package version
+            - uses: actions/checkout@v6.0.2
+
+            - name: Preparation
               run: |
-                  TYPE=$(echo ${{github.ref}} | cut -d'/' -f 2)
-                  LABEL=$(echo ${{github.ref}} | cut -d'/' -f 3)
-                  if [[ "$TYPE" == "tags" ]]; then
-                    echo "LATEST_PKG_VERSION=$LABEL" >> $GITHUB_ENV
-                    # echo "::set-output name=latest_pkg_version::$LABEL"
-                  else
-                    git fetch --tags
-                    LATEST_PKG_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1))-$LABEL
-                    echo "LATEST_PKG_VERSION=$LATEST_PKG_VERSION" >> $GITHUB_ENV
-                    # echo "::set-output name=latest_pkg_version::$LATEST_PKG_VERSION"
-                  fi;
-            - name: Create package source
-              run: |
-                  mkdir -p ${{env.PACKAGE_ROOT}}/usr/local/bin
-                  cp cooler.sh ${{env.PACKAGE_ROOT}}/usr/local/bin/cooler
-                  mkdir -p ${{env.PACKAGE_ROOT}}/etc/systemd/system/
-                  cp cooler.service ${{env.PACKAGE_ROOT}}/etc/systemd/system/cooler.service
-                  mkdir -p ${{env.PACKAGE_ROOT}}/usr/share/doc/cooler
-                  cp LICENSE ${{env.PACKAGE_ROOT}}/usr/share/doc/cooler/copyright
-            - name: Build package
-              id: build
-              uses: jiro4989/build-deb-action@v2
-              with:
-                  package: ${{env.PACKAGE}}
-                  desc: ${{env.DESC}}
-                  maintainer: ${{env.MAINTAINER}}
-                  package_root: ${{env.PACKAGE_ROOT}}
-                  arch: "arm64"
-                  # version: ${{steps.vars.outputs.latest_pkg_version}}
-                  version: ${{env.LATEST_PKG_VERSION}}
-            - name: Upload package artifact
-              uses: actions/upload-artifact@v6.0.0
-              with:
-                  path: "*.deb"
-            - name: Retrieve package name
-              run: |
-                  PKG=$(ls *.deb)
-                  echo "PKG=$PKG" >> $GITHUB_ENV
-            - name: Create Draft Release
-              uses: actions/create-release@v1
-              if: startsWith(github.ref, 'refs/tags/')
-              id: create_release
+                  cp LICENSE debian/copyright
+
+            - name: Build Debian package
+              uses: jtdor/build-deb-action@v1
               env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+                  DEB_BUILD_OPTIONS: noautodbgsym
               with:
-                  tag_name: ${{ github.ref }}
-                  release_name: Release ${{ github.ref }}
-                  draft: true
-                  prerelease: false
-            - name: Upload Release Asset
-              uses: actions/upload-release-asset@v1
-              if: startsWith(github.ref, 'refs/tags/')
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  buildpackage-opts: --build=binary --no-sign
+
+            - name: Upload Debian package artifact
+              uses: actions/upload-artifact@v4
               with:
-                  upload_url: ${{steps.create_release.outputs.upload_url}}
-                  asset_path: ${{env.PKG}}
-                  asset_name: ${{env.PKG}}
-                  asset_content_type: application/vnd.debian.binary-package
+                  name: cooler-deb
+                  path: debian/artifacts/*.deb
+                  if-no-files-found: error

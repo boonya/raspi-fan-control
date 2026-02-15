@@ -4,7 +4,7 @@ Documentation=https://github.com/boonya/raspi-fan-control
 After=multi-user.target
 
 [Service]
-ExecStart=/usr/local/bin/cooler
+ExecStart=/usr/local/bin/cooler.sh
 TimeoutStartSec=30
 Restart=always
 

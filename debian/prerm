@@ -1,4 +1,4 @@
-#!/bin/env sh
+#!/bin/sh
 set -e
 
 systemctl disable cooler || echo "Can't disable service"
