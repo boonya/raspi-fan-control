@@ -21,8 +21,14 @@ jobs:
               with:
                   package: cooler
                   desc: "RaspberryPI Cooling Fan Control Service"
-                  # arch: arm64
-                  package_root: pkg
                   version: 1.0.0+${{ github.ref_name }}
                   homepage: ${{ github.repositoryUrl }}
                   maintainer: ${{ github.repository_owner }}
+                  arch: arm64
+                  package_root: pkg
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: cooler-deb-package
+                  path: "*.deb"
