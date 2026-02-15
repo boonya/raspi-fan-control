@@ -23,6 +23,6 @@ jobs:
                   desc: "RaspberryPI Cooling Fan Control Service"
                   # arch: arm64
                   package_root: pkg
-                  version: ${{ github.ref_name }}
+                  version: 1.0.0+${{ github.ref_name }}
                   homepage: ${{ github.repositoryUrl }}
                   maintainer: ${{ github.repository_owner }}
