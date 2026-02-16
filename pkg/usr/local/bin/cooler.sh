@@ -14,7 +14,7 @@ if [ ! -e $dev_pwm ]; then
 fi
 
 # PWM frequency (nanoseconds)
-period=1000000
+period=15000000
 
 # temperature breakpoints (millidegrees)
 off_low=34000
@@ -23,8 +23,8 @@ low_high=40000
 high_low=36000
 
 # fan-speed (nanoseconds)
-low=300000
-high=999999
+low=5000000
+high=14999999
 
 # on/off values
 off=0
