@@ -17,7 +17,7 @@ Then reboot your Raspberry Pi.
 Once this is complete, you can download and install the package.
 
 ```sh
-v=0.1.0
+v=1.0.0
 wget https://github.com/boonya/raspi-fan-control/releases/download/${v}/cooler_${v}_arm64.deb
 sudo dpkg -i cooler_${v}_arm64.deb
 ```
