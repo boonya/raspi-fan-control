@@ -17,13 +17,13 @@ fi
 period=15000000
 
 # temperature breakpoints (millidegrees)
-off_low=34000
-low_off=30000
-low_high=40000
-high_low=36000
+off_low=42000
+low_off=40000
+low_high=50000
+high_low=46000
 
 # fan-speed (nanoseconds)
-low=5000000
+low=6000000
 high=14999999
 
 # on/off values
